@@ -43,13 +43,14 @@ cybersecurity thing from that one guy in Ohio," not... the other things that com
 
 ## 🎮 What Is This Repository?
 
-This is the most comprehensive, detailed, and unnecessarily well-documented guide to reverse engineering game internals ever created by a single man from the Midwest.
+This is the most comprehensive, detailed, and unnecessarily well-documented guide to reverse engineering game internals
+ever created by a single man from the Midwest.
 
 <div align="center">
 
 ![OHHHH](./assets/ohhhh.gif)
 
-*Your reaction when you finally understand how ESP works*
+_Your reaction when you finally understand how ESP works_
 
 </div>
 
@@ -58,7 +59,7 @@ This is the most comprehensive, detailed, and unnecessarily well-documented guid
 - You want to understand how ESP tools work
 - Quandale has _opinions_ about how to explain it
 - This repository is the result of his refusal to let you suffer through unclear documentation
-- Everyone wins (except anti-cheats)
+- Knowledge is power (use it responsibly)
 
 **The Honest Tagline:**
 
@@ -75,7 +76,7 @@ This is the most comprehensive, detailed, and unnecessarily well-documented guid
 | **01** | [What Is An ESP?](./01_What_Is_An_ESP.md)                                | Foundation building                    | "ohhhhh I get it now"                   |
 | **02** | [Injection and Shared Objects](./02_Injection_and_Shared_Objects.md)     | How to yeet your code into game memory | "wait that actually works??"            |
 | **03** | [Game Data and Memory Offsets](./03_Game_Data_and_Memory_Offsets.md)     | Finding player data                    | "why is this making sense"              |
-| **04** | [Evasion and Bypass Techniques](./04_Evasion_and_Bypass_Techniques.md)   | Anti-cheat? More like anti-skill issue | _sweating intensifies_                  |
+| **04** | [Evasion and Bypass Techniques](./04_Evasion_and_Bypass_Techniques.md)   | How anti-cheats defend against attacks | _understanding intensifies_             |
 | **05** | [The Complete A-Z Roadmap](./05_The_Complete_A-Z_Roadmap.md)             | Your literal step-by-step mission      | "okay i can do this"                    |
 | **06** | [Code Examples In Practice](./06_Code_Examples_In_Practice.md)           | Pseudo-code that slaps                 | "wait why am I understanding this"      |
 | **07** | [Project Difficulty and Roadmap](./07_Project_Difficulty_and_Roadmap.md) | Reality check time                     | _closes laptop_                         |
@@ -244,7 +245,7 @@ If you read this, you WILL understand:
 - How ESP tools work
 - How memory structures are organized
 - How injection techniques function
-- How anti-cheats try to stop you
+- How anti-cheats try to stop cheaters
 - Why kernel-level operations are the final boss
 
 What you do with this knowledge? That's on you.
