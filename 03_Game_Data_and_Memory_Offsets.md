@@ -31,37 +31,58 @@ While every "house" (Player object) has the same internal layout, they are all b
 
 When the analysis tool wants to find all the players, its first goal is to find this address book.
 
-**Visualizing the Memory Layout**
+### Visualizing the Memory Layout: Two-Level System
+
+Game memory uses a clever two-level structure to manage multiple players:
 
 ```
-// The Entity List itself lives at a known address (found via signature scan)
-Entity List (e.g., at address 0x12345678):
-+----------------+
-| [0]: 0xAAAA1000 |  <-- This is a POINTER to Player A's memory block
-| [1]: 0xBBBB2000 |  <-- This is a POINTER to Player B's memory block
-| [2]: 0xCCCC3000 |  <-- This is a POINTER to Player C's memory block
-+----------------+
-     |
-     +----------------------------------------+
-                                              |
-// Player A's actual data in memory           //
-Memory at Base Address 0xAAAA1000:            //
-+-----------------------------------+         //
-| (Start of the object)             |         //
-| ... other data ...                |         //
-| + 0x9A0 (health_offset): 100      |         //
-| + 0x9A4 (teamID_offset): 4        |         //
-+-----------------------------------+         //
-                                              |
-// Player B's actual data in memory          //
-Memory at Base Address 0xBBBB2000: <----------+
-+-----------------------------------+
-| (Start of the object)             |
-| ... other data ...                |
-| + 0x9A0 (health_offset): 85       |
-| + 0x9A4 (teamID_offset): 7        |
-+-----------------------------------+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          LEVEL 1: THE ENTITY LIST                       │
+│                                                                         │
+│  Address: 0x12345678  (Found via signature scan - stable per session)   │
+│  ┌─────────────────────────────────────────────────────────┐            │
+│  │ Index 0 ──────► 0xAAAA1000 (Player A base address)      │            │
+│  │ Index 1 ──────► 0xBBBB2000 (Player B base address)      │            │
+│  │ Index 2 ──────► 0xCCCC3000 (Player C base address)      │            │
+│  │ Index 3 ──────► (empty - slot for next player)          │            │
+│  └──────┬──────────────────────┬──────────────────────┬────┘            │
+│         │                      │                      │                 │
+└─────────┼──────────────────────┼──────────────────────┼─────────────────┘
+          │ Points to            │ Points to            │ Points to
+          │                      │                      │
+          ▼                      ▼                      ▼
+┌──────────────────────┐ ┌──────────────────────┐ ┌──────────────────────┐
+│ LEVEL 2: PLAYER A    │ │ LEVEL 2: PLAYER B    │ │ LEVEL 2: PLAYER C    │
+│                      │ │                      │ │                      │
+│ Base: 0xAAAA1000     │ │ Base: 0xBBBB2000     │ │ Base: 0xCCCC3000     │
+├──────────────────────┤ ├──────────────────────┤ ├──────────────────────┤
+│ +0x00: Player ID: 42 │ │ +0x00: Player ID: 51 │ │ +0x00: Player ID: 63 │
+│ +0x04: ...           │ │ +0x04: ...           │ │ +0x04: ...           │
+│ ...                  │ │ ...                  │ │ ...                  │
+│ +0x9A0: Health: 100  │ │ +0x9A0: Health: 85   │ │ +0x9A0: Health: 42   │
+│ +0x9A4: Team ID: 4   │ │ +0x9A4: Team ID: 7   │ │ +0x9A4: Team ID: 4   │
+│ +0x9A8: Pos.X: -45.2 │ │ +0x9A8: Pos.X: 12.4  │ │ +0x9A8: Pos.X: 200.1 │
+│ +0x9AC: Pos.Y: 123.7 │ │ +0x9AC: Pos.Y: -87.3 │ │ +0x9AC: Pos.Y: -5.6  │
+│ +0x9B0: Pos.Z: 2.1   │ │ +0x9B0: Pos.Z: 1.8   │ │ +0x9B0: Pos.Z: 0.0   │
+│ ...                  │ │ ...                  │ │ ...                  │
+└──────────────────────┘ └──────────────────────┘ └──────────────────────┘
 ```
+
+#### Understanding Each Layer
+
+**LEVEL 1 - Entity List (The Address Book):**
+
+- **Fixed Location:** Found once at the start via signature scan
+- **Purpose:** Stores pointers to all active player objects
+- **Updates:** Changes when players join/leave the match
+- **Access Pattern:** Read once per frame to get fresh player addresses
+
+**LEVEL 2 - Player Objects (The Actual Data):**
+
+- **Dynamic Addresses:** Each player's base address is different
+- **Consistent Layout:** Every player object has identical internal structure
+- **Static Offsets:** Health is always at base + 0x9A0
+- **Read Pattern:** Used every frame with known offsets
 
 ## Offsets and Signatures: The Tools for the Treasure Hunt
 
