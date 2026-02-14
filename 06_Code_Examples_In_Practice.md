@@ -59,6 +59,50 @@ int main() {
 }
 ```
 
+<details>
+<summary><b>🐍 Python Analogy: Game Code</b></summary>
+
+> **Note:** This is a **conceptual analogy** to help understand the C++ logic. This is NOT actual code and won't work as-is. It's meant to show how the data structures and concepts translate from C++ to a more familiar language.
+
+Here's the equivalent concept in Python to help understand the C++ structure:
+
+```python
+# Game.py - The game's main code
+
+# Define the data structures (like structs in C++)
+class Vector3:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+class Player:
+    def __init__(self, id, health, position):
+        self.id = id
+        self.health = health
+        self.position = position
+
+# THE CRITICAL DATA - A global list of all players
+# In real games, this would be at a fixed memory address
+g_entityList = []
+
+def main():
+    # When a match starts, populate the list with players
+    g_entityList.append(Player(1, 100, Vector3(10, 20, 30)))  # Local player
+    g_entityList.append(Player(2, 80, Vector3(55, -12, 32)))  # Opponent
+
+    # Game enters infinite loop
+    while True:
+        pass  # Game logic runs here...
+
+if __name__ == "__main__":
+    main()
+```
+
+The key difference: In C++, these objects are stored at predictable memory addresses. In Python, objects are allocated on the heap, but the same principle applies—the game maintains this data somewhere in memory that an analysis tool can access.
+
+</details>
+
 ---
 
 ## The Analysis Tool's Code (`Tool.so.cpp`)
@@ -123,3 +167,67 @@ extern "C" void StartTool() {
     toolThread.detach();
 }
 ```
+
+<details>
+<summary><b>🐍 Python Analogy: Analysis Tool Code</b></summary>
+
+> **Note:** This is a **conceptual analogy** showing how the C++ tool logic could be expressed in Python. This is NOT production-ready code. In reality, memory reading requires low-level libraries like `ctypes`, `pymem`, or direct system calls.
+
+Here's how you might conceptually write the analysis tool in Python:
+
+```python
+# Tool.py - The analysis tool injected into the game process
+
+import time
+import threading
+
+# Replicate the game's data structures
+class Vector3:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+class Player:
+    def __init__(self, id, health, position):
+        self.id = id
+        self.health = health
+        self.position = position
+
+def analysis_loop(entity_list_ref):
+    """
+    Main analysis loop that runs in a separate thread.
+    In C++, we cast a memory address to a pointer.
+    In Python, we would have a reference to the actual object.
+    """
+    while True:
+        if entity_list_ref:
+            # Read from the game's entity list
+            for player in entity_list_ref:
+                if player.id != 1:  # Ignore local player
+                    print(f"[TOOL] Reading data for Player {player.id}")
+                    print(f"       Health: {player.health}")
+                    print(f"       Position: ({player.position.x}, {player.position.y}, {player.position.z})")
+        
+        # Sleep to avoid consuming 100% CPU
+        time.sleep(0.05)  # 50 milliseconds
+
+def start_tool(entity_list_ref):
+    """
+    Entry point of the tool (equivalent to StartTool() in C++).
+    This is called when the tool is injected.
+    """
+    # CRITICAL: Create a new thread so we don't freeze the game
+    tool_thread = threading.Thread(target=analysis_loop, args=(entity_list_ref,), daemon=True)
+    
+    # Start the thread and let it run in the background
+    tool_thread.start()
+    # We don't need to wait for it—it runs independently
+```
+
+**Key Concept in Python:**
+- In C++, you cast a memory address to a pointer to read game data
+- In Python, you would typically pass a reference to the game's actual objects (though in reality, a tool would use `ctypes` or similar libraries to read memory)
+- Both approaches run the tool in a separate thread to avoid freezing the game
+
+</details>
