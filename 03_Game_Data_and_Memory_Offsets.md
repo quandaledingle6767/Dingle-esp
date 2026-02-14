@@ -164,3 +164,114 @@ The ESP's main loop continuously repeats the following:
       V
 [Loop back to Step 2]
 ```
+
+---
+
+<details>
+<summary><b>📝 Optional: Python Code Example (Conceptual)</b></summary>
+
+> **Note:** The following is a simplified, conceptual example to illustrate how offsets and base addresses work. This is **NOT production code** and won't actually run as-is. It's meant to help you understand the logic behind memory reading in an ESP tool.
+
+```python
+import ctypes
+
+class GameMemoryReader:
+    def __init__(self, process_handle):
+        self.process = process_handle
+        self.entity_list_address = 0x12345678  # Found via signature scan (once at startup)
+        
+        # Static offsets discovered through reverse engineering
+        self.OFFSET_PLAYER_ID = 0x00
+        self.OFFSET_HEALTH = 0x9A0
+        self.OFFSET_TEAM_ID = 0x9A4
+        self.OFFSET_POS_X = 0x9A8
+        self.OFFSET_POS_Y = 0x9AC
+        self.OFFSET_POS_Z = 0x9B0
+    
+    def read_int32(self, address):
+        """Read a 4-byte integer from process memory"""
+        buffer = ctypes.c_int32()
+        ctypes.windll.kernel32.ReadProcessMemory(
+            self.process, 
+            address, 
+            ctypes.byref(buffer), 
+            ctypes.sizeof(buffer), 
+            None
+        )
+        return buffer.value
+    
+    def read_float(self, address):
+        """Read a 4-byte float from process memory"""
+        buffer = ctypes.c_float()
+        ctypes.windll.kernel32.ReadProcessMemory(
+            self.process, 
+            address, 
+            ctypes.byref(buffer), 
+            ctypes.sizeof(buffer), 
+            None
+        )
+        return buffer.value
+    
+    def read_pointer(self, address):
+        """Read an 8-byte pointer from process memory"""
+        buffer = ctypes.c_uint64()
+        ctypes.windll.kernel32.ReadProcessMemory(
+            self.process, 
+            address, 
+            ctypes.byref(buffer), 
+            ctypes.sizeof(buffer), 
+            None
+        )
+        return buffer.value
+    
+    def get_all_players(self):
+        """
+        STEP 1: Read Entity List (done every frame - lightweight operation)
+        STEP 2: For each player, add offsets to read their data
+        """
+        players = []
+        max_players = 64
+        
+        # Read pointers from the entity list (Level 1)
+        for i in range(max_players):
+            player_ptr_address = self.entity_list_address + (i * 8)  # 8 bytes per pointer
+            player_base_address = self.read_pointer(player_ptr_address)
+            
+            if player_base_address == 0:  # Empty slot
+                continue
+            
+            # Now use offsets to read player data from their base address (Level 2)
+            player = {
+                'id': self.read_int32(player_base_address + self.OFFSET_PLAYER_ID),
+                'health': self.read_int32(player_base_address + self.OFFSET_HEALTH),
+                'team_id': self.read_int32(player_base_address + self.OFFSET_TEAM_ID),
+                'position': {
+                    'x': self.read_float(player_base_address + self.OFFSET_POS_X),
+                    'y': self.read_float(player_base_address + self.OFFSET_POS_Y),
+                    'z': self.read_float(player_base_address + self.OFFSET_POS_Z),
+                }
+            }
+            players.append(player)
+        
+        return players
+    
+    def main_esp_loop(self):
+        """Main ESP loop that runs every frame"""
+        while True:
+            # This is the lightweight operation done every frame
+            players = self.get_all_players()
+            
+            # Process and display player data
+            for player in players:
+                print(f"Player {player['id']}: Health={player['health']}")
+```
+
+**Key Takeaways from the Code:**
+
+1. **The entity list address** (`0x12345678`) is found **once** via signature scan at startup
+2. **Offsets** (`0x9A0` for health, `0x9A8` for X position) are **static** and determined by the game's class structure
+3. **Base addresses** change for each player but can be read from the entity list every frame
+4. **Reading player data** = `base_address + offset`. Example: `player_health = player_base + 0x9A0`
+5. The **main loop is lightweight** because it only reads data; it doesn't scan memory every time
+
+</details>
