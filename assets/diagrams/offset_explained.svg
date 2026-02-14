@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900">
+  <defs>
+    <style>
+      .level-box { fill: #f0f0f0; stroke: #333; stroke-width: 2; }
+      .level-title { font-size: 20px; font-weight: bold; fill: #333; }
+      .address-label { font-size: 13px; fill: #666; font-family: monospace; }
+      .data-label { font-size: 12px; fill: #333; font-family: monospace; }
+      .offset-highlight { fill: none; stroke: #ff6b6b; stroke-width: 2; stroke-dasharray: 3,3; }
+      .offset-label { font-size: 11px; fill: #ff6b6b; font-weight: bold; font-family: Arial; }
+      .connector-arrow { stroke: #ff6b6b; stroke-width: 2; fill: none; marker-end: url(#arrowred); }
+    </style>
+  </defs>
+  <text class="level-title" style="font-size: 24px; white-space: pre;" text-anchor="middle" y="44.18" x="500">Game Entity Memory Structure</text>
+  <g id="level1">
+    <text x="500" y="85" text-anchor="middle" class="level-title" style="white-space: pre;">LEVEL 1: ENTITY LIST</text>
+    <rect x="80" y="105" width="840" height="140" class="level-box" rx="5"/>
+    <text x="100" y="130" class="address-label" style="white-space: pre;">Base Address: 0x12345678 (Found via signature scan)</text>
+    <g id="slots">
+      <rect x="110" y="150" width="180" height="80" fill="none" stroke="#4a90e2" stroke-width="2" rx="3"/>
+      <text x="125" y="172" class="data-label" font-weight="bold" style="white-space: pre;">Index 0</text>
+      <text x="125" y="195" class="address-label" style="white-space: pre;">0xAAAA1000</text>
+      <text x="125" y="217" class="data-label" fill="#666" style="white-space: pre;">(Player A)</text>
+      <rect x="330" y="150" width="180" height="80" fill="none" stroke="#4a90e2" stroke-width="2" rx="3"/>
+      <text x="345" y="172" class="data-label" font-weight="bold" style="white-space: pre;">Index 1</text>
+      <text x="345" y="195" class="address-label" style="white-space: pre;">0xBBBB2000</text>
+      <text x="345" y="217" class="data-label" fill="#666" style="white-space: pre;">(Player B)</text>
+      <rect x="550" y="150" width="180" height="80" fill="none" stroke="#4a90e2" stroke-width="2" rx="3"/>
+      <text x="565" y="172" class="data-label" font-weight="bold" style="white-space: pre;">Index 2</text>
+      <text x="565" y="195" class="address-label" style="white-space: pre;">0xCCCC3000</text>
+      <text x="565" y="217" class="data-label" fill="#666" style="white-space: pre;">(Player C)</text>
+      <rect x="770" y="150" width="140" height="80" fill="none" stroke="#ccc" stroke-width="2" stroke-dasharray="5,5" rx="3"/>
+      <text x="785" y="172" class="data-label" font-weight="bold" style="white-space: pre;">Index 3</text>
+      <text x="785" y="195" class="data-label" fill="#999" style="white-space: pre;">(empty)</text>
+    </g>
+  </g>
+  <g id="level2" transform="matrix(1, 0, 0, 1, 0, -21.802496)">
+    <text x="500" y="310" text-anchor="middle" class="level-title" style="white-space: pre;">LEVEL 2: PLAYER DATA STRUCTURES</text>
+    <text style="fill: rgb(231, 76, 60); font-size: 13px; font-style: italic; font-weight: 700; text-anchor: middle; white-space: pre;" x="500" y="335">(Notice: All three players have IDENTICAL OFFSETS )</text>
+    <g id="player-a">
+      <rect x="50" y="360" width="260" height="380" class="level-box" rx="5"/>
+      <rect x="50" y="360" width="260" height="35" fill="#4a90e2" rx="5"/>
+      <text x="180" y="385" text-anchor="middle" fill="white" font-weight="bold" font-size="15" style="white-space: pre;">PLAYER A</text>
+      <text x="70" y="420" class="address-label" style="white-space: pre;">Base: 0xAAAA1000</text>
+      <line x1="70" y1="432" x2="300" y2="432" stroke="#ddd" stroke-width="1"/>
+      <rect x="65" y="448" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="70" y="465" class="data-label" style="white-space: pre;">+0x00: Player ID: 42</text>
+      <text x="70" y="492" class="data-label" style="white-space: pre;">+0x04: ...</text>
+      <text x="70" y="517" class="data-label" style="white-space: pre;">...</text>
+      <rect x="65" y="535" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="70" y="552" class="data-label" style="white-space: pre;">+0x9A0: Health: 100</text>
+      <rect x="65" y="560" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="70" y="577" class="data-label" style="white-space: pre;">+0x9A4: Team ID: 4</text>
+      <rect x="65" y="585" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="70" y="602" class="data-label" style="white-space: pre;">+0x9A8: Pos.X: -45.2</text>
+      <rect x="65" y="610" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="70" y="627" class="data-label" style="white-space: pre;">+0x9AC: Pos.Y: 123.7</text>
+      <rect x="65" y="635" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="70" y="652" class="data-label" style="white-space: pre;">+0x9B0: Pos.Z: 2.1</text>
+      <text x="70" y="677" class="data-label" style="white-space: pre;">...</text>
+    </g>
+    <g id="player-b">
+      <rect x="370" y="360" width="260" height="380" class="level-box" rx="5"/>
+      <rect x="370" y="360" width="260" height="35" fill="#4a90e2" rx="5"/>
+      <text x="500" y="385" text-anchor="middle" fill="white" font-weight="bold" font-size="15" style="white-space: pre;">PLAYER B</text>
+      <text x="390" y="420" class="address-label" style="white-space: pre;">Base: 0xBBBB2000</text>
+      <line x1="390" y1="432" x2="620" y2="432" stroke="#ddd" stroke-width="1"/>
+      <rect x="385" y="448" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="390" y="465" class="data-label" style="white-space: pre;">+0x00: Player ID: 51</text>
+      <text x="390" y="492" class="data-label" style="white-space: pre;">+0x04: ...</text>
+      <text x="390" y="517" class="data-label" style="white-space: pre;">...</text>
+      <rect x="385" y="535" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="390" y="552" class="data-label" style="white-space: pre;">+0x9A0: Health: 85</text>
+      <rect x="385" y="560" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="390" y="577" class="data-label" style="white-space: pre;">+0x9A4: Team ID: 7</text>
+      <rect x="385" y="585" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="390" y="602" class="data-label" style="white-space: pre;">+0x9A8: Pos.X: 12.4</text>
+      <rect x="385" y="610" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="390" y="627" class="data-label" style="white-space: pre;">+0x9AC: Pos.Y: -87.3</text>
+      <rect x="385" y="635" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="390" y="652" class="data-label" style="white-space: pre;">+0x9B0: Pos.Z: 1.8</text>
+      <text x="390" y="677" class="data-label" style="white-space: pre;">...</text>
+    </g>
+    <g id="player-c">
+      <rect x="690" y="360" width="260" height="380" class="level-box" rx="5"/>
+      <rect x="690" y="360" width="260" height="35" fill="#4a90e2" rx="5"/>
+      <text x="820" y="385" text-anchor="middle" fill="white" font-weight="bold" font-size="15" style="white-space: pre;">PLAYER C</text>
+      <text x="710" y="420" class="address-label" style="white-space: pre;">Base: 0xCCCC3000</text>
+      <line x1="710" y1="432" x2="940" y2="432" stroke="#ddd" stroke-width="1"/>
+      <rect x="705" y="448" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="710" y="465" class="data-label" style="white-space: pre;">+0x00: Player ID: 63</text>
+      <text x="710" y="492" class="data-label" style="white-space: pre;">+0x04: ...</text>
+      <text x="710" y="517" class="data-label" style="white-space: pre;">...</text>
+      <rect x="705" y="535" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="710" y="552" class="data-label" style="white-space: pre;">+0x9A0: Health: 42</text>
+      <rect x="705" y="560" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="710" y="577" class="data-label" style="white-space: pre;">+0x9A4: Team ID: 4</text>
+      <rect x="705" y="585" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="710" y="602" class="data-label" style="white-space: pre;">+0x9A8: Pos.X: 200.1</text>
+      <rect x="705" y="610" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="710" y="627" class="data-label" style="white-space: pre;">+0x9AC: Pos.Y: -5.6</text>
+      <rect x="705" y="635" width="230" height="22" class="offset-highlight" rx="2"/>
+      <text x="710" y="652" class="data-label" style="white-space: pre;">+0x9B0: Pos.Z: 0.0</text>
+      <text x="710" y="677" class="data-label" style="white-space: pre;">...</text>
+    </g>
+  </g>
+  <g id="explanation" transform="matrix(1, 0, 0, 1, 0, -8.032498)">
+    <rect x="50" y="770" width="900" height="116.922" fill="#fff3cd" stroke="#ffc107" stroke-width="2" rx="5" style=""/>
+    <text x="70" y="795" style="font-size: 13px; font-weight: bold; fill: rgb(133, 100, 4); white-space: pre;">KEY INSIGHT: FIXED OFFSETS</text>
+    <text x="70" y="820" style="font-size: 12px; fill: rgb(133, 100, 4); white-space: pre;">As you can see above, the memory offsets are identical across all players. Every player stores their:</text>
+    <text x="70" y="838" style="font-size: 12px; fill: rgb(133, 100, 4); white-space: pre;">• Health at offset +0x9A0 from their base address</text>
+    <text style="fill: rgb(133, 100, 4); font-size: 12px; white-space: pre;"><tspan x="70" y="872.061">• Team ID at offset </tspan><tspan style="font-weight: 700;">+0x9A4</tspan><tspan> from their base address</tspan></text>
+    <text style="fill: rgb(133, 100, 4); font-size: 12px; white-space: pre;"><tspan x="70" y="854.418">• Position (X, Y, Z) at offsets </tspan><tspan style="font-weight: 700;">+0x9A8</tspan><tspan>, </tspan><tspan style="font-weight: 700;">+0x9AC</tspan><tspan>, </tspan><tspan style="font-weight: 700;">+0x9B0</tspan><tspan> respectively</tspan></text>
+  </g>
+</svg>

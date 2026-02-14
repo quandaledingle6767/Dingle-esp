@@ -68,6 +68,8 @@ Game memory uses a clever two-level structure to manage multiple players:
 └──────────────────────┘ └──────────────────────┘ └──────────────────────┘
 ```
 
+> **Visual Diagram:** For a clearer, mobile-friendly visualization of memory offsets, see [@assets/diagrams/offset_explained.svg](@assets/diagrams/offset_explained.svg)
+
 #### Understanding Each Layer
 
 **LEVEL 1 - Entity List (The Address Book):**
